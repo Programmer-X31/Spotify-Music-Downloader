@@ -40,7 +40,7 @@ class Frontend_GUI(tk.Tk):
         self.LABEL(text="Location:", row=5, col=0)
         tk.Entry(width=50, textvariable=self.location).grid(row=5, column=2, columnspan=3,
                                                             ipadx=Styles.PADDING_X, ipady=Styles.PADDING_Y, padx=Styles.MARGIN_X, pady=Styles.MARGIN_Y)
-        # Submit Button TODO Finish the Submit Button
+        # Submit Button
         tk.Button(text="Start Download", command=self.handle_submit, bg="#00aabb").grid(
             row=7, column=0, columnspan=5)
 
@@ -126,7 +126,7 @@ class Frontend_GUI(tk.Tk):
     def __init__(self):
         super().__init__()
         self.title('Spotify Music Downloader')
-        self.geometry('540x365')
+        self.geometry('550x395')
         self.sp_dwn = Spotify_Downloader()
 
         self.sp_secret = tk.StringVar()
