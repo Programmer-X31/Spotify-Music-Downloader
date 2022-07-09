@@ -1,0 +1,7 @@
+pytube
+spotipy
+decouple
+bs4
+selenium
+webdriver-manager
+mutagen

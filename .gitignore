@@ -1,0 +1,5 @@
+.env
+env
+drivers/
+.cache
+__pycache__/
