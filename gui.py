@@ -16,6 +16,19 @@ class Styles:
 
 
 class Frontend_GUI(tk.Tk):
+    def __init__(self):
+        super().__init__()
+        self.title('Spotify Music Downloader')
+        self.geometry('550x395')
+        self.sp_dwn = Spotify_Downloader()
+
+        self.sp_secret = tk.StringVar()
+        self.sp_api_key = tk.StringVar()
+        self.playlist = tk.StringVar()
+        self.location = tk.StringVar()
+
+        self.draw_gui()
+
     def draw_gui(self):
         # Title
         tk.Label(text="Spotify Music Downloader", font=Styles.TITLE_FONT).grid(
@@ -122,19 +135,6 @@ class Frontend_GUI(tk.Tk):
             _text = kwargs["text"]
 
         return (tk.Label(text=_text, font=Styles.FONT).grid(ipadx=Styles.PADDING_X, ipady=Styles.PADDING_Y, row=_row, column=_col, columnspan=2))
-
-    def __init__(self):
-        super().__init__()
-        self.title('Spotify Music Downloader')
-        self.geometry('550x395')
-        self.sp_dwn = Spotify_Downloader()
-
-        self.sp_secret = tk.StringVar()
-        self.sp_api_key = tk.StringVar()
-        self.playlist = tk.StringVar()
-        self.location = tk.StringVar()
-
-        self.draw_gui()
 
 
 gui = Frontend_GUI()

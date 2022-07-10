@@ -10,6 +10,7 @@ class Spotify_Downloader():
     # Stable, Recommended
     def audio_download_pytube(self, url, artist_name, album_name, track_name, loc):
         video = pytube.YouTube(url).streams.filter(only_audio=True).first()
+
         # File Management for Safety
         if loc[-1] == "/":
             pass
@@ -21,6 +22,9 @@ class Spotify_Downloader():
             try:
                 # Do not Download audio if it already exists
                 if os.path.exists(f"{track_name}.mp3"):
+                    print(f"[*] {track_name}.mp3 already downloaded.")
+                    self.audio_download_success_count += 1
+                    self.audio_remaining_count -= 1
                     return
                 else:
                     pass
@@ -39,7 +43,7 @@ class Spotify_Downloader():
                 # Setting up Indicators
                 self.audio_download_success_count += 1
                 self.audio_remaining_count -= 1
-                print(f"Downloaded {track_name}.mp3")
+                print(f"[*] Downloaded {new_file}")
             except:
                 self.audio_download_failure_count += 1
                 self.audio_remaining_count -= 1
