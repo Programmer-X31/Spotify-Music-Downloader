@@ -4,9 +4,10 @@ from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.common.by import By
 import tkinter as tk
+import sys
 
 
-class Styles:
+class Styles:  # Static Class for maintaining files
     TITLE_FONT = ('Noto Sans', 20, 'bold')
     FONT = ('Noto Sans', 10)
     PADDING_X = 8
