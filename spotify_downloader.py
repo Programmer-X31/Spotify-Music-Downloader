@@ -1,4 +1,4 @@
-from mutagen.id3 import ID3, TIT2, TALB, TPE1
+from mutagen.id3 import ID3, TIT2, TALB, TPE1, TPE2
 from spotipy.oauth2 import SpotifyClientCredentials
 import sys
 import os
@@ -8,7 +8,7 @@ import pytube
 
 class Spotify_Downloader():
     # Stable, Recommended
-    def audio_download_pytube(self, url, artist_name, album_name, track_name, loc):
+    def audio_download_pytube(self, url, artist_names, album_name, track_name, loc) -> None:
         video = pytube.YouTube(url).streams.filter(only_audio=True).first()
 
         # File Management for Safety
@@ -36,7 +36,12 @@ class Spotify_Downloader():
                 # Setting up the Artist's Name in Metadata
                 tags = ID3()  # No filename as the downloaded file doesn't have ID3 tags
                 tags['TIT2'] = TIT2(encoding=3, text=track_name)  # Title
-                tags['TPE1'] = TPE1(encoding=3, text=artist_name)  # Artist
+                if len(artist_names) == 1:
+                    tags['TPE1'] = TPE1(encoding=3, text=artist_names[0])
+                if len(artist_names) == 2:
+                    tags['TPE1'] = TPE1(encoding=3, text=artist_names[0])
+                    tags['TPE2'] = TPE2(encoding=3, text=artist_names[1])
+
                 tags['TALB'] = TALB(encoding=3, text=album_name)  # Album Name
                 tags.save(new_file)
 
@@ -52,19 +57,33 @@ class Spotify_Downloader():
             print("Exiting due to wrong location for download")
             sys.exit()
 
-    def get_names(self, p_link):  # Gets the list of all tracks in a playlist
+    def get_names(self, p_link) -> None:  # Gets the list of all tracks in a playlist
         playlist_URI = p_link.split("/")[-1].split("?")[0]
         for track in self.sp.playlist_tracks(playlist_URI)["items"]:
             track_name = track["track"]["name"]  # Song name
 
-            artist_uri = track["track"]["artists"][0]["uri"]
-            artist_name = self.sp.artist(artist_uri)["name"]  # Artist Name
-
             album_uri = track["track"]["album"]["uri"]
             album_name = self.sp.album(album_uri)["name"]
 
-            self.data_playlist.append(
-                [track_name, artist_name, album_name])
+            if len(track["track"]["artists"]) == 1:
+                # Artist 1
+                artist1_uri = track["track"]["artists"][0]["uri"]
+                artist1_name = self.sp.artist(artist1_uri)["name"]
+
+                self.data_playlist.append(
+                    [track_name, [artist1_name], album_name])
+
+            elif len(track["track"]["artists"]) > 1:
+                # Artist 1
+                artist1_uri = track["track"]["artists"][0]["uri"]
+                artist1_name = self.sp.artist(artist1_uri)["name"]
+
+                # Artist 2
+                artist2_uri = track["track"]["artists"][1]["uri"]
+                artist2_name = self.sp.artist(artist2_uri)["name"]
+
+                self.data_playlist.append(
+                    [track_name, [artist1_name, artist2_name], album_name])
 
     def start_download_process(self, sp_client_id, sp_secret, p_link):
         # Setting up a connection with the API

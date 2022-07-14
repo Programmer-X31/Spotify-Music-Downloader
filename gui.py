@@ -98,8 +98,12 @@ class Frontend_GUI(tk.Tk):
             ChromeDriverManager().install()))  # Usage of ChromeDriverManager to remove redundancy of downloading driver
 
         BASE_URL = "https://www.youtube.com/results?search_query="
-        for track_name, artist_name, album_name in self.sp_dwn.data_playlist:
-            search_term = f"{track_name} - {artist_name}"
+        for track_name, artist_names, album_name in self.sp_dwn.data_playlist:
+            if len(artist_names) > 1 and len(artist_names) < 3:
+                search_term = f"{track_name} - {artist_names[0]}, {artist_names[1]}"
+            else:
+                search_term = f"{track_name} - {artist_names[0]}"
+
             URL = BASE_URL + search_term.replace(" ", "+")
             driver.get(URL)
             driver.implicitly_wait(5)
@@ -107,7 +111,7 @@ class Frontend_GUI(tk.Tk):
                 by=By.XPATH, value='/html/body/ytd-app/div[1]/ytd-page-manager/ytd-search/div[1]/ytd-two-column-search-results-renderer/div/ytd-section-list-renderer/div[2]/ytd-item-section-renderer/div[3]/ytd-video-renderer[1]/div[1]/div/div[1]/div/h3/a')
             youtube_url = title_elem.get_attribute("href")
             self.sp_dwn.audio_download_pytube(
-                youtube_url, artist_name, album_name, track_name, self.location.get())
+                youtube_url, artist_names, album_name, track_name, self.location.get())
 
             self.successful_download_label.configure(
                 text=str(self.sp_dwn.audio_download_success_count))
@@ -122,6 +126,7 @@ class Frontend_GUI(tk.Tk):
         tk.Label(text="Finished Process!", font=('Noto Sans', 15, 'bold')).grid(
             row=14, column=1, columnspan=4)
         print("[*] Completed Download Process. You may close the window now.")
+        sys.exit()
 
     def LABEL(self, **kwargs):
         _row = 0  # Row
